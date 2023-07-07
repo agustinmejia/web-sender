@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
+// Controllers
+use App\Http\Controllers\SenderController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +27,13 @@ Route::get('/', function () {
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
+    Route::get('/', function(){
+        return redirect('admin/profile');
+    })->name('voyager.dashboard');
+
+    // Sender
+    Route::get('sender', [SenderController::class, 'index'])->name('sender.index');
+    Route::post('sender/send', [SenderController::class, 'send'])->name('sender.send');
 });
 
 // Clear cache

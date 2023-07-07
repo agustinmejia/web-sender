@@ -7,7 +7,7 @@ use File;
 use TCG\Voyager\VoyagerServiceProvider;
 use Illuminate\Database\Seeder\VoyagerDatabaseSeeder;
 
-class install extends Command
+class Install extends Command
 {
     /**
      * The name and signature of the console command.

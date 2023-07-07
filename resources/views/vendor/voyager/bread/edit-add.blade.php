@@ -94,7 +94,7 @@
 
                         <div class="panel-footer text-right">
                             @section('submit-buttons')
-                                <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }} <i class="voyager-check"></i> </button>
+                                <button type="submit" class="btn btn-primary save"><i class="voyager-edit"></i> {{ $edit ? __('voyager::generic.edit'):  __('voyager::generic.save') }}  </button>
                             @stop
                             @yield('submit-buttons')
                         </div>

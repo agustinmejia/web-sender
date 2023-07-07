@@ -91,6 +91,42 @@ class DataTypesTableSeeder extends Seeder
                 'created_at' => '2022-05-24 15:21:20',
                 'updated_at' => '2022-05-24 15:21:20',
             ),
+            4 => 
+            array (
+                'id' => 5,
+                'name' => 'servers',
+                'slug' => 'servers',
+                'display_name_singular' => 'Servidor',
+                'display_name_plural' => 'Servidores',
+                'icon' => 'voyager-harddrive',
+                'model_name' => 'App\\Models\\Server',
+                'policy_name' => NULL,
+                'controller' => NULL,
+                'description' => NULL,
+                'generate_permissions' => 1,
+                'server_side' => 0,
+                'details' => '{"order_column":null,"order_display_column":null,"order_direction":"asc","default_search_key":null}',
+                'created_at' => '2023-07-07 10:01:08',
+                'updated_at' => '2023-07-07 10:01:08',
+            ),
+            5 => 
+            array (
+                'id' => 6,
+                'name' => 'contacts',
+                'slug' => 'contacts',
+                'display_name_singular' => 'Contacto',
+                'display_name_plural' => 'Contactos',
+                'icon' => 'voyager-people',
+                'model_name' => 'App\\Models\\Contact',
+                'policy_name' => NULL,
+                'controller' => NULL,
+                'description' => NULL,
+                'generate_permissions' => 1,
+                'server_side' => 0,
+                'details' => '{"order_column":null,"order_display_column":null,"order_direction":"asc","default_search_key":null,"scope":null}',
+                'created_at' => '2023-07-07 10:29:56',
+                'updated_at' => '2023-07-07 16:15:31',
+            ),
         ));
         
         
