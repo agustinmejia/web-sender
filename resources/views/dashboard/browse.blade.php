@@ -24,27 +24,27 @@
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
         <div class="row">
-            <form class="form-submit" action="{{ route('sender.send') }}" method="post">
+            <form class="form-submit" action="{{ route('sender.send') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="col-md-12">
                     <div class="panel panel-bordered">
                         <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="select-contact_id">Contacto</label>
-                                        <select name="contact_id[]" id="select-contact_id" multiple class="form-control select2" required>
-                                            <option value="todos">Todos</option>
-                                            @foreach (App\Models\Contact::where('status', 1)->where('deleted_at', NULL)->get() as $item)
-                                            <option value="{{ $item->id }}">{{ $item->phone }} {{ $item->full_name ? '('.$item->full_name.')' : '' }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="message">Contacto</label>
-                                        <textarea name="message" class="form-control" rows="5" required></textarea>
-                                    </div>
-                                </div>
+                            <div class="form-group col-md-12">
+                                <label for="select-contact_id">Contacto (*)</label>
+                                <select name="contact_id[]" id="select-contact_id" multiple class="form-control" required>
+                                    <option value="todos">Todos</option>
+                                    @foreach (App\Models\Contact::where('status', 1)->where('deleted_at', NULL)->get() as $item)
+                                    <option value="{{ $item->id }}">{{ $item->phone }} {{ $item->full_name ? '('.$item->full_name.')' : '' }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-8">
+                                <label for="message">Mensaje</label>
+                                <textarea name="message" class="form-control" rows="5"></textarea>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="image">Imagen</label>
+                                <input type="file" name="image" accept="image/png, image/jpeg">
                             </div>
                         </div>
                         <div class="panel-footer text-right">
@@ -65,6 +65,8 @@
 @section('javascript')
     <script>
         $(document).ready(function() {
+            $('#select-contact_id').select2();
+
             $('.form-submit').submit(function(){
                 $('.form-submit .btn-submit').attr('disabled', 'disabled');
             });

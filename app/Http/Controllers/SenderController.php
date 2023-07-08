@@ -27,6 +27,7 @@ class SenderController extends Controller
     public function send(Request $request) {
         try {
             $contact_id = $request->contact_id;
+            $image = $this->save_image($request->file('image'), 'messages');
 
             if($contact_id[0] == 'todos'){
                 $contacts = Contact::where('status', 1)->where('deleted_at', null)->get();
@@ -40,7 +41,8 @@ class SenderController extends Controller
                     $new_message = Message::create([
                         'user_id' => Auth::user()->id,
                         'contact_id' => $contact->id,
-                        'text' => $request->message
+                        'text' => $request->message,
+                        'image' => $image
                     ]);
 
                     $message = Message::find($new_message->id);

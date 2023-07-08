@@ -8,7 +8,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-
 use Illuminate\Support\Facades\Http;
 
 // Models
@@ -44,7 +43,12 @@ class ProcessSendMessage implements ShouldQueue
     public function handle()
     {
         $server = Server::where('status', 1)->first();
-        Http::get($server->url.'?number='.$this->message->contact->phone.'&message='.$this->message->text);
+        $phone = strlen($this->message->contact->phone) == 8 ? '591'.$this->message->contact->phone : $this->message->contact->phone;
+        Http::post($server->url.'/send', [
+            'phone' => $phone,
+            'text' => $this->message->text,
+            'image' => $this->message->image ? url('storage/'.$this->message->image) : '',
+        ]);
         $message = Message::find($this->message->id);
         $message->status = 'enviado';
         $message->update();

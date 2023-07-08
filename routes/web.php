@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 // Controllers
+use App\Http\Controllers\ServersController;
 use App\Http\Controllers\SenderController;
 
 /*
@@ -30,6 +31,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/', function(){
         return redirect('admin/profile');
     })->name('voyager.dashboard');
+
+    // Server
+    Route::get('servers/{server}/test', [ServersController::class, 'test'])->name('servers.test');
 
     // Sender
     Route::get('sender', [SenderController::class, 'index'])->name('sender.index');
