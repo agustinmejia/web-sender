@@ -50,6 +50,7 @@ class ProcessSendMessage implements ShouldQueue
             'image' => $this->message->image ? url('storage/'.$this->message->image) : '',
         ]);
         $message = Message::find($this->message->id);
+        $message->server_id = $server->id;
         $message->status = 'enviado';
         $message->update();
     }

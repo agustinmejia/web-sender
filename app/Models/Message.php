@@ -11,7 +11,7 @@ class Message extends Model
     use HasFactory, SoftDeletes;
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'user_id', 'contact_id', 'text', 'image', 'status'
+        'user_id', 'contact_id', 'server_id', 'text', 'image', 'status'
     ];
 
     public function contact() {
