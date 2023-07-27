@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 // Controllers
 use App\Http\Controllers\ServersController;
 use App\Http\Controllers\SenderController;
+use App\Http\Controllers\ImportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,10 @@ Route::group(['prefix' => 'admin'], function () {
     // Sender
     Route::get('sender', [SenderController::class, 'index'])->name('sender.index');
     Route::post('sender/send', [SenderController::class, 'send'])->name('sender.send');
+
+    // Imports
+    Route::get('imports', [ImportsController::class, 'index'])->name('imports.index');
+    Route::post('imports/store', [ImportsController::class, 'store'])->name('imports.store');
 });
 
 // Clear cache

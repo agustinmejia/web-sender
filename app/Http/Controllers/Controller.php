@@ -25,9 +25,10 @@ class Controller extends BaseController
         }
     }
 
-    public function save_image($file, $dir){
+    public function save_image($file, $folder){
         try {
-            Storage::makeDirectory("/public/$dir/".date('F').date('Y'));
+            $dir = $folder."/".date('F').date('Y');
+            Storage::makeDirectory($dir);
             $base_name = Str::random(20);
 
             // imagen normal
@@ -36,7 +37,7 @@ class Controller extends BaseController
             $image_resize->resize(1000, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
-            $path =  "$dir/".date('F').date('Y').'/'.$filename;
+            $path =  $dir.'/'.$filename;
             $image_resize->save(public_path('../storage/app/public/'.$path));
             $imagen = $path;
 
@@ -46,7 +47,7 @@ class Controller extends BaseController
             $image_resize->resize(512, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
-            $path_medium = "$dir/".date('F').date('Y').'/'.$filename_medium;
+            $path_medium = $dir.'/'.$filename_medium;
             $image_resize->save(public_path('../storage/app/public/'.$path_medium));
 
             // imagen pequeña
@@ -55,7 +56,7 @@ class Controller extends BaseController
             $image_resize->resize(256, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
-            $path_small = "$dir/".date('F').date('Y').'/'.$filename_small;
+            $path_small = $dir.'/'.$filename_small;
             $image_resize->save(public_path('../storage/app/public/'.$path_small));
 
             // imagen cuadrada
@@ -65,7 +66,7 @@ class Controller extends BaseController
                 $constraint->aspectRatio();
             });
             $image_resize->resizeCanvas(256, 256);
-            $path_small = "$dir/".date('F').date('Y').'/'.$filename_small;
+            $path_small = $dir.'/'.$filename_small;
             $image_resize->save(public_path('../storage/app/public/'.$path_small));
 
             return $imagen;

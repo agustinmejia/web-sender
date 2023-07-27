@@ -47,11 +47,12 @@ class ProcessSendMessage implements ShouldQueue
         Http::post($server->url.'/send', [
             'phone' => $phone,
             'text' => $this->message->text,
-            'image' => $this->message->image ? url('storage/'.$this->message->image) : '',
+            'image_url' => $this->message->image ? url('storage/'.$this->message->image) : '',
         ]);
         $message = Message::find($this->message->id);
         $message->server_id = $server->id;
         $message->status = 'enviado';
         $message->update();
+        sleep(1);
     }
 }

@@ -147,6 +147,12 @@ if (\Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Ill
 @if(!empty(config('voyager.additional_js')))<!-- Additional Javascript -->
     @foreach(config('voyager.additional_js') as $js)<script type="text/javascript" src="{{ asset($js) }}"></script>@endforeach
 @endif
-
+<script>
+    $(document).ready(function(){
+        $('.form-submit').submit(function(e){
+            $('.form-submit .btn-submit').attr('disabled', 'disabled');
+        });
+    });
+</script>
 </body>
 </html>

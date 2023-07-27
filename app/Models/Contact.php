@@ -10,4 +10,11 @@ class Contact extends Model
 {
     use HasFactory, SoftDeletes;
     protected $dates = ['deleted_at'];
+    protected $fillable = [
+        'city_id', 'full_name', 'phone', 'address', 'email', 'birthday', 'observations', 'status'
+    ];
+
+    public function categories(){
+        return $this->belongsToMany(Category::class, 'category_contact');
+    }
 }

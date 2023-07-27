@@ -1,7 +1,7 @@
 
 @extends('voyager::master')
 
-@section('page_title', 'Ver Title')
+@section('page_title', 'Ver Servidor')
 
 @php
     $server = App\Models\Server::find($dataTypeContent->getKey());
@@ -68,7 +68,7 @@
                                 @foreach ($server->messages as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->contact->full_name }}</td>
+                                        <td>{{ $item->contact->full_name ?? $item->contact->phone }}</td>
                                         <td>{{ $item->text }}</td>
                                         <td>
                                             @if ($item->image)
@@ -187,7 +187,7 @@
                             $('#status').html('<button type="button" class="btn btn-danger btn-offline" onclick="login()">Fuera línea</button>');
                         }
                     } else {
-                        // console.log('')
+                        console.log('Error al obtener el estado')
                     }
                 })
                 .catch(function(error) {
@@ -208,7 +208,7 @@
                     if (res.success) {
                         $('#status').html('<span>Iniciando sesión...</span>');
                     } else {
-                        // console.log('')
+                        console.log('Error al iniciar sesión')
                     }
                 })
                 .catch(function(error) {

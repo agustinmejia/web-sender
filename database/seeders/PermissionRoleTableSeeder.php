@@ -26,6 +26,7 @@ class PermissionRoleTableSeeder extends Seeder
                                                 `key` = 'browse_sender' or
                                                 table_name = 'settings' or
                                                 table_name = 'contacts' or
+                                                table_name = 'imports' or
                                                 table_name = 'users'")->get();
         $role->permissions()->sync($permissions->pluck('id')->all());
     }
