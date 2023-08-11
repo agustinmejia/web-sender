@@ -10,7 +10,7 @@ use App\Models\Contact;
 use App\Models\Server;
 use App\Models\Message;
 
-// Queue
+// Queues
 use App\Jobs\ProcessSendMessage;
 
 class SenderController extends Controller
@@ -45,14 +45,14 @@ class SenderController extends Controller
                         'image' => $image
                     ]);
 
-                    $message = Message::find($new_message->id);
-                    ProcessSendMessage::dispatch($message);
+                    // $message = Message::find($new_message->id);
+                    // ProcessSendMessage::dispatch($message);
                 }
             }else {
                 return redirect()->route('sender.index')->with(['message' => 'No hay servidores activos', 'alert-type' => 'error']);
             }
 
-            return redirect()->route('sender.index')->with(['message' => 'Mensaje enviado exitosamente', 'alert-type' => 'success']);
+            return redirect()->route('sender.index')->with(['message' => 'Mensaje registrados para envío', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
             // dd($th);
             return redirect()->route('sender.index')->with(['message' => 'Ocurrió un error en el servidor', 'alert-type' => 'error']);

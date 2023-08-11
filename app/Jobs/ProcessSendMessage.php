@@ -42,17 +42,33 @@ class ProcessSendMessage implements ShouldQueue
      */
     public function handle()
     {
+        // Obtener servidor en línea
         $server = Server::where('status', 1)->first();
-        $phone = strlen($this->message->contact->phone) == 8 ? '591'.$this->message->contact->phone : $this->message->contact->phone;
-        Http::post($server->url.'/send', [
-            'phone' => $phone,
-            'text' => $this->message->text,
-            'image_url' => $this->message->image ? url('storage/'.$this->message->image) : '',
-        ]);
-        $message = Message::find($this->message->id);
-        $message->server_id = $server->id;
-        $message->status = 'enviado';
-        $message->update();
-        sleep(1);
+        if ($server) {
+            // Verificar si el servidor en verdad está en línea
+            $response = Http::get($server->url.'/status');
+            if($response->ok()){
+                $res = json_decode($response->body());
+                if(isset($res->success)){
+                    if($res->status == 1){
+                        
+                        // Si está en línea
+                        $phone = strlen($this->message->contact->phone) == 8 ? '591'.$this->message->contact->phone : $this->message->contact->phone;
+                        Http::post($server->url.'/send', [
+                            'phone' => $phone,
+                            'text' => $this->message->text,
+                            'image_url' => $this->message->image ? url('storage/'.$this->message->image) : '',
+                        ]);
+
+                        // Update message
+                        $message = Message::find($this->message->id);
+                        $message->server_id = $server->id;
+                        $message->status = 'enviado';
+                        $message->update();
+                    }
+                }
+            }
+        }
+            
     }
 }

@@ -57,16 +57,22 @@
                         <table id="dataTable" class="table table-bordered">
                             <thead>
                                 <tr>
+                                    <th>N&deg;</th>
                                     <th>ID</th>
                                     <th>Contacto</th>
                                     <th>Texto</th>
                                     <th>Imagen</th>
+                                    <th>Estado</th>
                                     <th>Fecha</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($server->messages as $item)
+                                @php
+                                    $cont = 1;
+                                @endphp
+                                @foreach ($server->messages->sortByDesc('id') as $item)
                                     <tr>
+                                        <td>{{ $cont }}</td>
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->contact->full_name ?? $item->contact->phone }}</td>
                                         <td>{{ $item->text }}</td>
@@ -75,11 +81,15 @@
                                                 <img src="{{ asset('storage/'.str_replace('.', '-small.', $item->image)) }}" alt="{{ $item->text }}" width="50px">
                                             @endif
                                         </td>
+                                        <th><label class="label label-{{ $item->status == 'enviado' ? 'primary' : 'default' }}">{{ Str::ucfirst($item->status) }}</label></th>
                                         <td>
                                             {{ date('d/m/Y H:i', strtotime($item->created_at)) }} <br>
                                             <small>{{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</small>
                                         </td>
                                     </tr>
+                                    @php
+                                        $cont++;
+                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>
@@ -143,7 +153,7 @@
     <script>
         $(document).ready(function () {
             $('#dataTable').DataTable({
-                order: [[ 0, "desc" ]],
+                order: [[ 1, "desc" ]],
                 language: {
                     sProcessing: "Procesando...",
                     sLengthMenu: "Mostrar _MENU_ registros",

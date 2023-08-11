@@ -5,6 +5,12 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+// Models
+use App\Models\Message;
+
+// Queues
+use App\Jobs\ProcessSendMessage;
+
 class Kernel extends ConsoleKernel
 {
     /**
@@ -25,6 +31,13 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+            $messages = Message::where('status', 'pendiente')->limit(10)->get();
+            foreach ($messages as $message) {
+                ProcessSendMessage::dispatch($message);
+                sleep(5);
+            }
+        })->everyMinute();
     }
 
     /**
