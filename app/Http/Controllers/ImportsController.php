@@ -18,7 +18,6 @@ class ImportsController extends Controller
             Excel::import(new ContactsImport, request()->file('file'));
             return redirect()->route('imports.index')->with(['message' => 'Datos importados correctamente', 'alert-type' => 'success']);
         } catch (\Throwable $th) {
-            throw $th;
             return redirect()->route('imports.index')->with(['message' => 'Ocurrió un error en el servidor', 'alert-type' => 'error']);
         }
     }

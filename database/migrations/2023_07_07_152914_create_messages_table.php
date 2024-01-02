@@ -16,11 +16,8 @@ class CreateMessagesTable extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users');
-            $table->foreignId('contact_id')->nullable()->constrained('contacts');
-            $table->foreignId('server_id')->nullable()->constrained('servers');
             $table->text('text')->nullable();
             $table->string('image')->nullable();
-            $table->string('status')->nullable()->default('pendiente');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Contact;
 use App\Models\Server;
 use App\Models\Message;
+use App\Models\ContactMessage;
 
 // Queues
 use App\Jobs\ProcessSendMessage;
@@ -35,18 +36,20 @@ class SenderController extends Controller
                 $contacts = Contact::whereIn('id', $contact_id)->get();
             }
 
+
+            $message = Message::create([
+                'user_id' => Auth::user()->id,
+                'text' => $request->message,
+                'image' => $image
+            ]);
+
             $server = Server::where('status', 1)->first();
             if ($server) {
                 foreach ($contacts as $contact) {
-                    $new_message = Message::create([
-                        'user_id' => Auth::user()->id,
+                    ContactMessage::create([
                         'contact_id' => $contact->id,
-                        'text' => $request->message,
-                        'image' => $image
+                        'message_id' => $message->id
                     ]);
-
-                    // $message = Message::find($new_message->id);
-                    // ProcessSendMessage::dispatch($message);
                 }
             }else {
                 return redirect()->route('sender.index')->with(['message' => 'No hay servidores activos', 'alert-type' => 'error']);

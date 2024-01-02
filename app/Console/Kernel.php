@@ -31,13 +31,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->call(function () {
-            $messages = Message::where('status', 'pendiente')->limit(10)->get();
-            foreach ($messages as $message) {
-                ProcessSendMessage::dispatch($message);
-                sleep(5);
-            }
-        })->everyMinute();
     }
 
     /**
