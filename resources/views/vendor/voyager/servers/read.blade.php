@@ -4,7 +4,7 @@
 @section('page_title', 'Ver Servidor')
 
 @php
-    $server = App\Models\Server::find($dataTypeContent->getKey());
+    $server = App\Models\Server::with(['contact_messages.message', 'contact_messages.contact'])->where('id', $dataTypeContent->getKey())->first();
 @endphp
 
 @section('page_header')
@@ -64,27 +64,34 @@
                                     <th>Imagen</th>
                                     <th>Estado</th>
                                     <th>Fecha</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
                                     $cont = 1;
                                 @endphp
-                                @foreach ($server->messages->sortByDesc('id') as $item)
+                                @foreach ($server->contact_messages->sortByDesc('id') as $item)
                                     <tr>
                                         <td>{{ $cont }}</td>
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->contact->full_name ?? $item->contact->phone }}</td>
-                                        <td>{{ $item->text }}</td>
+                                        <td>{{ $item->message->text }}</td>
                                         <td>
-                                            @if ($item->image)
-                                                <img src="{{ asset('storage/'.str_replace('.', '-small.', $item->image)) }}" alt="{{ $item->text }}" width="50px">
+                                            @if ($item->message->image)
+                                                <img src="{{ asset('storage/'.str_replace('.', '-small.', $item->message->image)) }}" alt="{{ $item->message->text }}" width="50px">
                                             @endif
                                         </td>
                                         <th><label class="label label-{{ $item->status == 'enviado' ? 'primary' : 'default' }}">{{ Str::ucfirst($item->status) }}</label></th>
                                         <td>
                                             {{ date('d/m/Y H:i', strtotime($item->created_at)) }} <br>
                                             <small>{{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</small>
+                                        </td>
+                                        <td class="no-sort no-click bread-actions text-right">
+                                            @if ($item->status == 'pendiente')
+                                                <a href="{{ route('servers.send', ['server' => $server->id, 'id' => $item->id]) }}" title="Ver" class="btn btn-sm btn-success view"><i class="voyager-paper-plane"></i> <span class="hidden-xs hidden-sm">Enviar</span></a>
+                                                <a href="javascript:;" title="Borrar" class="btn btn-sm btn-danger delete" disabled data-id="1" id="delete-1"><i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Borrar</span></a>
+                                            @endif
                                         </td>
                                     </tr>
                                     @php
@@ -182,7 +189,8 @@
                 }
             });
 
-            fetch('{{ $server->url }}/status')
+            console.log('{{ $server->url }}/status?id={{ $server->slug }}')
+            fetch('{{ $server->url }}/status?id={{ $server->slug }}')
                 .then(response => {
                     if(response.ok) {
                         return response.json();
@@ -207,7 +215,7 @@
         });
 
         function login() {
-            fetch('{{ $server->url }}/login')
+            fetch('{{ $server->url }}/login?id={{ $server->slug }}')
                 .then(response => {
                     if(response.ok) {
                         return response.json();

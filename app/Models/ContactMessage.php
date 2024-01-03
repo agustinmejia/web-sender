@@ -14,4 +14,16 @@ class ContactMessage extends Model
     protected $fillable = [
         'server_id', 'contact_id', 'message_id', 'status'
     ];
+
+    public function server(){
+        return $this->belongsTo(Server::class);
+    }
+
+    public function message(){
+        return $this->belongsTo(Message::class);
+    }
+
+    public function contact(){
+        return $this->belongsTo(Contact::class);
+    }
 }

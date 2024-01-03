@@ -11,28 +11,17 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 
 // Models
-use App\Models\Server;
-use App\Models\Message;
+use App\Models\ContactMessage;
 
 class ProcessSendMessage implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * The message instance.
-     *
-     * @var \App\Models\Message
-     */
-    protected $message;
+    protected $contact_message;
 
-    /**
-     * Create a new job instance.
-     * @param \App\Models\Message $message
-     * @return void
-     */
-    public function __construct(Message $message)
+    public function __construct(ContactMessage $contact_message)
     {
-        $this->message = $message->withoutRelations();
+        $this->contact_message = $contact_message->withoutRelations();
     }
 
     /**
@@ -42,30 +31,25 @@ class ProcessSendMessage implements ShouldQueue
      */
     public function handle()
     {
-        // Obtener servidor en línea
-        $server = Server::where('status', 1)->first();
-        if ($server) {
-            // Verificar si el servidor en verdad está en línea
-            $response = Http::get($server->url.'/status');
-            if($response->ok()){
-                $res = json_decode($response->body());
-                if(isset($res->success)){
-                    if($res->status == 1){
-                        
-                        // Si está en línea
-                        $phone = strlen($this->message->contact->phone) == 8 ? '591'.$this->message->contact->phone : $this->message->contact->phone;
-                        Http::post($server->url.'/send', [
-                            'phone' => $phone,
-                            'text' => $this->message->text,
-                            'image_url' => $this->message->image ? url('storage/'.$this->message->image) : '',
-                        ]);
+        // Verificar si el servidor en verdad está en línea
+        $response = Http::get($this->contact_message->server->url.'/status?id='.$this->contact_message->server->slug);
+        if($response->ok()){
+            $res = json_decode($response->body());
+            if(isset($res->success)){
+                if($res->status == 1){
+                    
+                    // Si está en línea
+                    $phone = strlen($this->contact_message->contact->phone) == 8 ? '591'.$this->contact_message->contact->phone : $this->contact_message->contact->phone;
+                    Http::post($this->contact_message->server->url.'/send?id='.$this->contact_message->server->slug, [
+                        'phone' => $phone,
+                        'text' => $this->contact_message->message->text,
+                        'image_url' => $this->contact_message->message->image ? url('storage/'.$this->contact_message->message->image) : '',
+                    ]);
 
-                        // Update message
-                        $message = Message::find($this->message->id);
-                        $message->server_id = $server->id;
-                        $message->status = 'enviado';
-                        $message->update();
-                    }
+                    // Update message
+                    $contact_message = ContactMessage::find($this->contact_message->id);
+                    $contact_message->status = 'enviado';
+                    $contact_message->update();
                 }
             }
         }

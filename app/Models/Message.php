@@ -13,8 +13,4 @@ class Message extends Model
     protected $fillable = [
         'user_id', 'text', 'image'
     ];
-
-    public function contact() {
-        return $this->belongsTo(Contact::class);
-    }
 }

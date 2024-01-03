@@ -35,6 +35,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     // Server
     Route::get('servers/{server}/test', [ServersController::class, 'test'])->name('servers.test');
+    Route::get('servers/{server}/send/{id}', [ServersController::class, 'send'])->name('servers.send');
 
     // Sender
     Route::get('sender', [SenderController::class, 'index'])->name('sender.index');

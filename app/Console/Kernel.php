@@ -8,9 +8,6 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 // Models
 use App\Models\Message;
 
-// Queues
-use App\Jobs\ProcessSendMessage;
-
 class Kernel extends ConsoleKernel
 {
     /**

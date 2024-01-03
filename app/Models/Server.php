@@ -11,7 +11,7 @@ class Server extends Model
     use HasFactory, SoftDeletes;
     protected $dates = ['deleted_at'];
 
-    public function messages() {
-        return $this->hasMany(Message::class);
+    public function contact_messages() {
+        return $this->hasMany(ContactMessage::class);
     }
 }

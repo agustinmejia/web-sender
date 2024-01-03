@@ -29,12 +29,25 @@
                 <div class="col-md-12">
                     <div class="panel panel-bordered">
                         <div class="panel-body">
-                            <div class="form-group col-md-12">
+                            @php
+                                $contacts = App\Models\Contact::where('status', 1)->where('deleted_at', NULL)->get();
+                            @endphp
+                            <div class="form-group col-md-8">
                                 <label for="select-contact_id">Contacto (*)</label>
                                 <select name="contact_id[]" id="select-contact_id" multiple class="form-control" required>
+                                    @if ($contacts->count())
                                     <option value="todos">Todos</option>
-                                    @foreach (App\Models\Contact::where('status', 1)->where('deleted_at', NULL)->get() as $item)
+                                    @endif
+                                    @foreach ($contacts as $item)
                                     <option value="{{ $item->id }}">{{ $item->phone }} {{ $item->full_name ? '('.$item->full_name.')' : '' }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="image">Imagen</label>
+                                <select name="server_id" class="form-control select2" required>
+                                    @foreach (App\Models\Server::where('status', 1)->get() as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

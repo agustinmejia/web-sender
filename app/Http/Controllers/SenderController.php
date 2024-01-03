@@ -7,12 +7,8 @@ use Illuminate\Support\Facades\Auth;
 
 // Models
 use App\Models\Contact;
-use App\Models\Server;
 use App\Models\Message;
 use App\Models\ContactMessage;
-
-// Queues
-use App\Jobs\ProcessSendMessage;
 
 class SenderController extends Controller
 {
@@ -43,16 +39,12 @@ class SenderController extends Controller
                 'image' => $image
             ]);
 
-            $server = Server::where('status', 1)->first();
-            if ($server) {
-                foreach ($contacts as $contact) {
-                    ContactMessage::create([
-                        'contact_id' => $contact->id,
-                        'message_id' => $message->id
-                    ]);
-                }
-            }else {
-                return redirect()->route('sender.index')->with(['message' => 'No hay servidores activos', 'alert-type' => 'error']);
+            foreach ($contacts as $contact) {
+                ContactMessage::create([
+                    'server_id' => $request->server_id,
+                    'contact_id' => $contact->id,
+                    'message_id' => $message->id
+                ]);
             }
 
             return redirect()->route('sender.index')->with(['message' => 'Mensaje registrados para envío', 'alert-type' => 'success']);
